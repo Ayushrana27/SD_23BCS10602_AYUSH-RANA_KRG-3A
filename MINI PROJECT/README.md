@@ -18,6 +18,7 @@ Optimize for read/write performance
 🧩 System Architecture
 8
 🔹 Components
+
 Client Applications: Mobile/Web interface
 Load Balancer: Distributes incoming traffic
 API Servers: Handle REST requests
@@ -26,6 +27,8 @@ Message Queue (Kafka/RabbitMQ): Asynchronous processing
 Database (NoSQL): Stores chats and messages
 Cache (Redis): Fast data retrieval
 Object Storage (S3): Media storage
+
+
 ⚙️ Features
 ✅ Core Features
 One-to-one messaging
@@ -34,11 +37,13 @@ Real-time message delivery
 Message status (sent, delivered, read)
 Media sharing (images, videos)
 Push notifications
+
 🚀 Advanced Features
 End-to-end encryption (optional)
 Typing indicators
 Read receipts
 Scalable group messaging
+
 🔗 API Design
 Authentication
 POST /auth/register – Register user
