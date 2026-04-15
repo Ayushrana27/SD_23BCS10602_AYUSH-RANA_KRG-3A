@@ -1,0 +1,229 @@
+ API Design – Real-Time Chat System
+1. Overview
+
+This document defines the API specifications for a scalable real-time chat system similar to WhatsApp. The system uses a combination of REST APIs for standard operations and WebSocket connections for real-time communication.
+
+2. Base Configuration
+Base URL:
+https://api.chatapp.com/v1
+Authentication:
+JSON Web Token (JWT)
+Data Format:
+JSON
+Protocols:
+REST (HTTP/HTTPS)
+WebSocket (real-time messaging)
+3. Authentication APIs
+3.1 User Registration
+
+Endpoint:
+POST /auth/register
+
+Request Body:
+
+{
+  "name": "Ayush Rana",
+  "phone": "9876543210",
+  "password": "hashed_password"
+}
+
+Response:
+
+{
+  "user_id": "u123",
+  "message": "User registered successfully"
+}
+3.2 User Login
+
+Endpoint:
+POST /auth/login
+
+Request Body:
+
+{
+  "phone": "9876543210",
+  "password": "password"
+}
+
+Response:
+
+{
+  "token": "JWT_TOKEN",
+  "user_id": "u123"
+}
+4. User APIs
+4.1 Get User Profile
+
+Endpoint:
+GET /users/{user_id}
+
+Response:
+
+{
+  "user_id": "u123",
+  "name": "Ayush Rana",
+  "phone": "9876543210"
+}
+4.2 Update User Profile
+
+Endpoint:
+PUT /users/{user_id}
+
+Request Body:
+
+{
+  "name": "Updated Name"
+}
+5. Chat APIs
+5.1 Create One-to-One Chat
+
+Endpoint:
+POST /chats
+
+Request Body:
+
+{
+  "participants": ["u123", "u456"],
+  "type": "direct"
+}
+
+Response:
+
+{
+  "chat_id": "c123"
+}
+5.2 Create Group Chat
+
+Endpoint:
+POST /chats/group
+
+Request Body:
+
+{
+  "name": "Project Team",
+  "participants": ["u123", "u456", "u789"]
+}
+5.3 Get User Chats
+
+Endpoint:
+GET /chats?user_id=u123
+
+6. Message APIs
+6.1 Send Message
+
+Endpoint:
+POST /messages
+
+Request Body:
+
+{
+  "chat_id": "c123",
+  "sender_id": "u123",
+  "type": "text",
+  "content": "Hello",
+  "client_msg_id": "msg_temp_001"
+}
+
+Response:
+
+{
+  "message_id": "m123",
+  "status": "sent"
+}
+6.2 Retrieve Messages (Pagination)
+
+Endpoint:
+GET /messages?chat_id=c123&limit=20&cursor=abc123
+
+Response:
+
+{
+  "messages": [],
+  "next_cursor": "xyz456"
+}
+6.3 Update Message Status
+
+Endpoint:
+PATCH /messages/{message_id}/status
+
+Request Body:
+
+{
+  "status": "read"
+}
+6.4 Delete Message
+
+Endpoint:
+DELETE /messages/{message_id}
+
+7. Media APIs
+7.1 Upload Media
+
+Endpoint:
+POST /media/upload
+
+Response:
+
+{
+  "media_url": "https://storage.service/file.jpg"
+}
+7.2 Send Media Message
+
+Example Payload:
+
+{
+  "chat_id": "c123",
+  "type": "image",
+  "media_url": "https://storage.service/file.jpg"
+}
+8. Notification APIs (Internal Use)
+8.1 Send Notification
+
+Endpoint:
+POST /notifications/send
+
+9. WebSocket API (Real-Time Communication)
+9.1 Connection
+
+Endpoint:
+ws://api.chatapp.com/ws?token=JWT_TOKEN
+
+9.2 Events
+Send Message Event
+{
+  "event": "send_message",
+  "data": {
+    "chat_id": "c123",
+    "content": "Hello"
+  }
+}
+Receive Message Event
+{
+  "event": "new_message",
+  "data": {
+    "message_id": "m123",
+    "sender_id": "u456",
+    "content": "Hi"
+  }
+}
+Typing Indicator
+{
+  "event": "typing",
+  "chat_id": "c123"
+}
+Read Receipt
+{
+  "event": "read_receipt",
+  "message_id": "m123"
+}
+10. Design Considerations
+Idempotency:
+client_msg_id ensures duplicate message prevention.
+Pagination:
+Cursor-based pagination improves performance for large datasets.
+Security:
+HTTPS for all communication
+JWT-based authentication
+Optional end-to-end encryption
+Rate Limiting:
+Applied to prevent abuse and ensure system stability.
