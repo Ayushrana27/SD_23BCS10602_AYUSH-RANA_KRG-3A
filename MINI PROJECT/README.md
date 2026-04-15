@@ -1,110 +1,98 @@
-📱 Real-Time Chat System (WhatsApp-like)
-📌 Overview
+📱 Real-Time Chat System – System Design
+📌 Abstract
 
-This project presents the design of a scalable, real-time chat system similar to WhatsApp.
-The system supports instant messaging, group chats, media sharing, and real-time updates using modern distributed system principles.
+This project presents the design of a scalable, fault-tolerant, and low-latency real-time chat system similar to modern messaging platforms.
+The system leverages distributed architecture, WebSockets, NoSQL databases, caching, and asynchronous processing to support millions of concurrent users.
 
-The design focuses on:
+🎯 Problem Statement
 
-High scalability
-Low latency communication
-Fault tolerance
-Secure messaging
-🎯 Objectives
-Design a system capable of handling millions of concurrent users
-Ensure real-time message delivery
-Maintain high availability and reliability
-Optimize for read/write performance
-🧩 System Architecture
-8
-🔹 Components
+Design a system that:
 
-Client Applications: Mobile/Web interface
-Load Balancer: Distributes incoming traffic
-API Servers: Handle REST requests
-WebSocket Servers: Enable real-time communication
-Message Queue (Kafka/RabbitMQ): Asynchronous processing
-Database (NoSQL): Stores chats and messages
-Cache (Redis): Fast data retrieval
-Object Storage (S3): Media storage
-
-
-⚙️ Features
-✅ Core Features
-One-to-one messaging
-Group chat support
+Enables instant messaging between users
+Supports group conversations
+Ensures real-time communication with minimal delay
+Scales efficiently under heavy load
+🧩 High-Level Architecture
+5
+🔹 Components Description
+Client Layer: Mobile/Web apps for user interaction
+Load Balancer: Distributes incoming traffic efficiently
+API Layer: Handles authentication, chat, and message APIs
+WebSocket Layer: Maintains persistent connections for real-time messaging
+Message Queue: Enables asynchronous communication (Kafka/RabbitMQ)
+Cache Layer (Redis): Stores frequently accessed data
+Database Layer (NoSQL): Stores chats and messages
+Object Storage: Handles media files
+⚙️ Functional Requirements
+User registration and authentication
+One-to-one and group messaging
 Real-time message delivery
-Message status (sent, delivered, read)
-Media sharing (images, videos)
-Push notifications
-
-🚀 Advanced Features
-End-to-end encryption (optional)
-Typing indicators
-Read receipts
-Scalable group messaging
-
-🔗 API Design
+Message status tracking (sent, delivered, read)
+Media sharing support
+⚡ Non-Functional Requirements
+Scalability: Support millions of users
+Availability: ≥ 99.9% uptime
+Performance: Low latency (<100 ms)
+Reliability: No message loss
+Security: Secure communication and optional encryption
+🔗 API Overview
 Authentication
-POST /auth/register – Register user
-POST /auth/login – Login and receive JWT
+POST /auth/register
+POST /auth/login
 Chat Management
-POST /chats – Create direct chat
-POST /chats/group – Create group chat
-GET /chats – Retrieve user chats
+POST /chats
+POST /chats/group
+GET /chats
 Messaging
-POST /messages – Send message
-GET /messages – Retrieve messages (pagination)
-PATCH /messages/{id}/status – Update status
-DELETE /messages/{id} – Delete message
+POST /messages
+GET /messages (cursor-based pagination)
+PATCH /messages/{id}/status
+DELETE /messages/{id}
 Real-Time Communication
-
-WebSocket connection:
-
 ws://api.chatapp.com/ws?token=JWT
 🗄️ Database Design
-Collections
-Users
-Chats
-Messages
-Group Members
-Message Status
-Key Design Choices
-NoSQL database for scalability
-Sharding based on chat_id
-Indexing for efficient queries
-External storage for media files
-📈 Scaling Strategy
+Key Collections
+Users – stores user information
+Chats – maintains chat metadata
+Messages – stores all messages
+Group Members – handles group participation
+Message Status – tracks read/delivery states
+Design Highlights
+NoSQL database for horizontal scalability
+Sharding using chat_id
+Indexing for efficient retrieval
+Media stored externally (object storage)
+📈 Scalability Strategy
 🔹 Load Balancing
-Distributes traffic across servers
-Ensures high availability
+Distributes traffic across multiple servers
+Supports fault tolerance and high availability
 🔹 Caching (Redis)
-Stores recent chats and active users
+Stores recent messages and active sessions
 Reduces database load
 🔹 Sharding
-Data partitioning using chat_id
-Enables horizontal scaling
-🔹 Message Queue
-Handles asynchronous processing
-Improves system reliability
-⚖️ Trade-offs
-Decision	Choice	Reason
+Partitions data based on chat_id
+Enables distributed data storage
+🔹 Asynchronous Processing
+Message queue handles high traffic
+Prevents system bottlenecks
+⚖️ Design Trade-offs
+Aspect	Chosen Approach	Rationale
 Communication	WebSockets	Real-time, low latency
-Database	NoSQL	High scalability
-Processing	Asynchronous	Better fault tolerance
-Storage	Object Storage	Efficient media handling
-Pagination	Cursor-based	Performance optimization
+Database	NoSQL	High scalability and flexibility
+Processing	Asynchronous	Improved reliability
+Storage	Object Storage	Efficient handling of media
+Pagination	Cursor-based	Better performance
 🔐 Security Considerations
 JWT-based authentication
 HTTPS communication
+Rate limiting to prevent abuse
 Optional end-to-end encryption
-Rate limiting for abuse prevention
-🧠 Key Design Highlights
-Horizontally scalable architecture
-Event-driven message processing
-Low latency real-time communication
-Efficient data retrieval and storage
-📂 Project Structure
+🧠 Key Design Insights
+Event-driven architecture ensures scalability
+Persistent WebSocket connections enable instant communication
+Caching significantly reduces latency
+Distributed storage ensures fault tolerance
+📂 Repository Structure
 ├── README.md
 ├── Requirements.md
 ├── API_Design.md
@@ -113,17 +101,16 @@ Efficient data retrieval and storage
 ├── Trade-offs.md
 ├── architecture.png
 🚀 Future Enhancements
-Voice and video calling
-Message search functionality
-AI-based chat suggestions
+Voice and video communication
+AI-based chat recommendations
 Multi-device synchronization
+Advanced search and analytics
 🏁 Conclusion
 
-This system is designed to handle large-scale real-time communication efficiently.
-By combining WebSockets, NoSQL databases, caching, and distributed architecture, the system ensures high performance, scalability, and reliability.
+The proposed system demonstrates a robust and scalable architecture capable of supporting large-scale real-time communication.
+By integrating WebSockets, distributed systems, and optimized data handling techniques, the system achieves high performance, reliability, and user experience.
 
 👨‍💻 Author
 
 Ayush Rana
-Computer Science Engineering Student
-Chandigarh University
+B.Tech CSE | Chandigarh University
