@@ -1,0 +1,109 @@
+Database Design – Real-Time Chat System
+1. Overview
+
+The database is designed to support a highly scalable, low-latency messaging system.
+A NoSQL database (e.g., MongoDB / Cassandra) is preferred due to:
+
+High write throughput
+Horizontal scalability
+Flexible schema for messages
+2. Design Approach
+Denormalized schema for faster reads
+Optimized for write-heavy workloads
+Partitioning based on chat_id or user_id
+Indexing for efficient querying
+3. Collections / Tables
+3.1 Users Collection
+{
+  "user_id": "u123",
+  "name": "Ayush Rana",
+  "phone": "9876543210",
+  "profile_pic": "url",
+  "status": "online",
+  "last_seen": "timestamp",
+  "created_at": "timestamp"
+}
+Indexes:
+user_id (Primary Key)
+phone (Unique)
+3.2 Chats Collection
+{
+  "chat_id": "c123",
+  "type": "direct", 
+  "participants": ["u123", "u456"],
+  "created_at": "timestamp",
+  "last_message": {
+    "message_id": "m123",
+    "content": "Hello",
+    "timestamp": "timestamp"
+  }
+}
+Indexes:
+chat_id (Primary Key)
+participants (for quick lookup of user chats)
+3.3 Messages Collection
+{
+  "message_id": "m123",
+  "chat_id": "c123",
+  "sender_id": "u123",
+  "type": "text",
+  "content": "Hello",
+  "media_url": null,
+  "timestamp": "timestamp",
+  "status": "sent",
+  "client_msg_id": "temp_001"
+}
+Indexes:
+message_id (Primary Key)
+chat_id + timestamp (for message retrieval)
+client_msg_id (for idempotency)
+3.4 Group Members Collection (For Group Chats)
+{
+  "chat_id": "c123",
+  "user_id": "u456",
+  "role": "member",
+  "joined_at": "timestamp"
+}
+Indexes:
+chat_id
+user_id
+3.5 Message Status Collection (Read Receipts)
+{
+  "message_id": "m123",
+  "user_id": "u456",
+  "status": "read",
+  "timestamp": "timestamp"
+}
+Indexes:
+message_id
+user_id
+4. Relationships (Logical)
+One user → multiple chats
+One chat → multiple messages
+One message → multiple status entries (for group read receipts)
+5. Data Partitioning (Sharding)
+Shard Key Options:
+chat_id → best for message distribution
+user_id → best for user-centric queries
+
+ Shard on chat_id
+Reason: Messages are fetched chat-wise
+
+6. Caching Strategy
+Use Redis for:
+Recent messages
+Active chats
+Online users
+7. Storage Optimization
+Store media files in Object Storage (e.g., S3)
+Save only media_url in database
+Compress old messages (cold storage)
+8. Consistency Considerations
+Eventual consistency is acceptable
+Strong consistency only for:
+Message ordering within a chat
+Delivery acknowledgment
+9. Scalability Considerations
+Horizontal scaling using sharding
+Separate read/write replicas
+Batch writes for message storage
